@@ -3,75 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? 'FocusHR System'; ?></title>
-    
+    <title><?= $title; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --primary-color: #0d6efd;
-            --bg-light: #f8f9fa;
-        }
-        body {
-            background-color: var(--bg-light);
-            font-family: 'Inter', -apple-system, sans-serif;
-        }
-        .navbar {
-            background-color: #ffffff !important;
-            border-bottom: 1px solid #e3e6f0;
-        }
-        .navbar-brand {
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--primary-color) !important;
-        }
-        .main-content {
-            padding-top: 30px;
-            padding-bottom: 50px;
-        }
-        /* Styling tambahan untuk Card agar mirip Talenta */
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
+        :root { --sidebar-width: 240px; --topbar-height: 60px; --primary-talenta: #3758f9; }
+        body { background-color: #f4f7fa; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        
+        /* SIDEBAR (9) */
+        .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; background: white; border-right: 1px solid #e0e0e0; z-index: 1000; }
+        .sidebar-brand { height: var(--topbar-height); padding: 15px; border-bottom: 1px solid #f0f0f0; }
+        .nav-link { color: #616161; padding: 10px 20px; font-size: 14px; display: flex; align-items: center; }
+        .nav-link:hover, .nav-link.active { background: #f0f4ff; color: var(--primary-talenta); border-left: 4px solid var(--primary-talenta); }
+        .nav-link i { width: 25px; }
+
+        /* TOPBAR (1-8) */
+        .topbar { height: var(--topbar-height); background: white; position: fixed; left: var(--sidebar-width); right: 0; border-bottom: 1px solid #e0e0e0; z-index: 999; padding: 0 20px; }
+        .main-content { margin-left: var(--sidebar-width); padding-top: calc(var(--topbar-height) + 20px); padding-right: 20px; padding-left: 20px; }
+        
+        .btn-ai { background: #f0f4ff; color: var(--primary-talenta); border-radius: 20px; font-size: 13px; border: 1px solid #d0dfff; }
+        .profile-img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="/payroll">
-                <i class="fas fa-chart-pie me-2"></i>FOCUS<span class="text-dark">HR</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link px-3" href="/employees"><i class="fas fa-users me-1"></i> Karyawan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3 active fw-bold text-primary" href="/payroll"><i class="fas fa-wallet me-1"></i> Payroll</a>
-                    </li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-outline-danger btn-sm rounded-pill px-4" href="#"><i class="fas fa-sign-out-alt me-1"></i> Keluar</a>
-                    </li>
-                </ul>
-            </div>
+<div class="sidebar">
+    <div class="sidebar-brand d-flex align-items-center">
+        <img src="/logo.png" height="30" class="me-2"> <div class="dropdown"> <button class="btn btn-sm dropdown-toggle fw-bold" data-bs-toggle="dropdown">HRIS</button>
         </div>
-    </nav>
+    </div>
+    <div class="nav flex-column mt-2">
+        <a href="/" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="nav-link"><i class="fas fa-user-circle"></i> Employee profile</a>
+        <a href="/employees" class="nav-link"><i class="fas fa-users"></i> Employees <i class="fas fa-chevron-right ms-auto small"></i></a>
+        <a href="#" class="nav-link"><i class="fas fa-user-plus"></i> Recruitment <i class="fas fa-chevron-right ms-auto small"></i></a>
+        <a href="/payroll" class="nav-link"><i class="fas fa-wallet"></i> Payroll <i class="fas fa-chevron-right ms-auto small"></i></a>
+        <a href="#" class="nav-link mt-4 text-muted small uppercase">Applications</a>
+        <a href="#" class="nav-link"><i class="fas fa-th-large"></i> Integrations</a>
+        <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+</div>
 
-    <main class="container main-content">
-        <?= $this->renderSection('content'); ?>
-    </main>
+<div class="topbar d-flex align-items-center justify-content-end gap-3">
+    <button class="btn btn-ai px-3"><i class="fas fa-sparkles"></i> Summarize data</button> <i class="fas fa-plus text-muted cursor-pointer"></i> <i class="fas fa-search text-muted cursor-pointer"></i> <div class="position-relative">
+        <i class="fas fa-bell text-muted cursor-pointer"></i> <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 8px;">99+</span>
+    </div>
+    <i class="fas fa-th text-muted cursor-pointer"></i> <img src="https://ui-avatars.com/api/?name=Surya" class="profile-img border"> </div>
 
-    <footer class="text-center py-4 mt-auto">
-        <p class="text-muted small">&copy; 2026 FocusHR System • Payroll Engine v1.0</p>
-    </footer>
+<div class="main-content">
+    <?= $this->renderSection('content'); ?>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
