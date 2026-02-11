@@ -2,23 +2,31 @@
 
 namespace App\Controllers;
 
+use App\Models\EmployeeModel;
+use App\Models\PayrollModel;
+
 class Home extends BaseController
 {
     public function index()
-{
-    $db = \Config\Database::connect();
-    
-    $data = [
-        'title' => 'Home | FocusHR',
-        'nama_user' => 'SURYA',
-        // Statistik (11)
-        'total_karyawan' => $db->table('employees')->countAll(),
-        'status_counts' => [
-            'permanent' => $db->table('employees')->where('posisi', 'Permanent')->countAllResults(),
-            'contract'  => $db->table('employees')->where('posisi', 'Contract')->countAllResults(),
-        ]
-    ];
+    {
+        $empModel = new EmployeeModel();
+        $payModel = new PayrollModel();
 
-    return view('dashboard/index', $data);
-}
+        $data = [
+            'title'          => 'Dashboard | FocusHR',
+            'nama_user'      => session()->get('username'),
+            'total_employee' => $empModel->countAll(),
+            'total_gaji'     => $payModel->selectSum('gaji_netto')
+                                         ->where('bulan', date('m'))
+                                         ->where('tahun', date('Y'))
+                                         ->first()['gaji_netto'] ?? 0,
+            'recent_payroll' => $payModel->select('payrolls.*, employees.nama')
+                                         ->join('employees', 'employees.id = payrolls.employee_id')
+                                         ->orderBy('payrolls.created_at', 'DESC')
+                                         ->limit(5)
+                                         ->findAll()
+        ];
+
+        return view('dashboard/index', $data);
+    }
 }

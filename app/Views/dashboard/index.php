@@ -7,16 +7,69 @@
     Is Logged In: <?= session()->get('isLoggedIn') ? 'Ya' : 'Tidak'; ?>
 </div>
 
-<div class="nav flex-column mt-2">
-
-    <a href="<?= site_url('logout'); ?>" class="nav-link text-danger">
-        <i class="fas fa-sign-out-alt"></i> Logout
-    </a>
+<div class="card-body">
+    <h6 class="text-muted small">TOTAL EMPLOYEES</h6>
+    <h3 class="fw-bold"><?= $total_employee; ?></h3>
 </div>
 
+<div class="card-body">
+    <h6 class="text-muted small">TOTAL PAYROLL (<?= date('F'); ?>)</h6>
+    <h3 class="fw-bold text-primary">Rp <?= number_format($total_gaji, 0, ',', '.'); ?></h3>
+</div>
+
+
+
 <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center mb-4" style="background: #fff9e6; color: #856404; font-size: 14px;">
-    <i class="fas fa-exclamation-triangle me-3"></i>
+    <i class="fas <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> me-3"></i>
     <span>There are some transactions that need to be calculated. Please run the payroll to process. <a href="/payroll" class="fw-bold">View</a></span>
+</div>
+
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-header bg-white py-3 border-0">
+        <h6 class="fw-bold mb-0">Recent Payroll Transactions</h6>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle table-hover mb-0">
+            <thead class="bg-light">
+                <tr class="small text-muted">
+                    <th>EMPLOYEE</th>
+                    <th>PERIOD</th>
+                    <th>NET SALARY</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($recent_payroll)) : ?>
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted small">No recent transactions found.</td>
+                    </tr>
+                <?php else : ?>
+                    <?php foreach ($recent_payroll as $rp) : ?>
+                        <tr>
+                            <td>
+                                <p class="fw-bold mb-0 small"><?= $rp['nama']; ?></p>
+                            </td>
+                            <td class="small"><?= date('F', mktime(0, 0, 0, $rp['bulan'], 10)); ?> <?= $rp['tahun']; ?></td>
+                            <td class="fw-bold small">Rp <?= number_format($rp['gaji_netto'], 0, ',', '.'); ?></td>
+                            <td>
+                                <?php if ($rp['status_bayar'] == 'paid') : ?>
+                                    <span class="badge bg-success-subtle text-success px-3 rounded-pill">Paid</span>
+                                <?php else : ?>
+                                    <span class="badge bg-warning-subtle text-warning px-3 rounded-pill">Pending</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <a href="<?= site_url('payroll/payslip/' . $rp['id']); ?>" class="btn btn-sm btn-light border rounded-pill">
+                                    <i class="fas fa-file-invoice text-primary"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="card border-0 shadow-sm mb-4 overflow-hidden position-relative">
@@ -51,7 +104,7 @@
                 <div class="progress-bar bg-danger" style="width: 5%"></div>
             </div>
             <div class="small">
-                <div class="d-flex justify-content-between mb-1"><span>Permanent</span> <b><?= $total_karyawan; ?></b></div>
+                <div class="d-flex justify-content-between mb-1"><span>Permanent</span> <b><?= $total_employee; ?></b></div>
                 <div class="d-flex justify-content-between text-muted"><span>Contract</span> <b>0</b></div>
             </div>
         </div>
@@ -74,7 +127,7 @@
                 <div class="progress-bar bg-info" style="width: 40%"></div>
                 <div class="progress-bar bg-success" style="width: 30%"></div>
             </div>
-            <p class="small text-muted mt-auto">Staff: 40% | Manager: 30%</p>
+            <p class="small text-muted mt-auto">Staff: 0% | Manager: 0%</p>
         </div>
     </div>
 
@@ -83,7 +136,7 @@
             <h6 class="fw-bold small text-muted text-start">Gender Diversity</h6>
             <div class="py-2">
                 <canvas id="genderChart" style="max-height: 100px;"></canvas>
-                <h4 class="fw-bold mt-2"><?= $total_karyawan; ?></h4>
+                <h4 class="fw-bold mt-2"><?= $total_employee; ?></h4>
                 <p class="small text-muted">Total Employee</p>
             </div>
         </div>
