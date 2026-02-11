@@ -7,6 +7,33 @@ use App\Models\PayrollModel;
 
 class Payroll extends BaseController
 {
+public function payslip($id)
+{
+    $payrollModel = new \App\Models\PayrollModel();
+    
+    // Ambil data payroll dan gabungkan dengan data karyawan
+    $payroll = $payrollModel->select('payrolls.*, employees.nama, employees.posisi, employees.tunjangan_tetap')
+                            ->join('employees', 'employees.id = payrolls.employee_id')
+                            ->where('payrolls.id', $id)
+                            ->first();
+
+    if (!$payroll) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Slip gaji tidak ditemukan.");
+    }
+
+    // Rekalkulasi potongan untuk tampilan (berdasarkan logika 1% di generate)
+    $potongan = $payroll['pokok_snapshot'] * 0.01;
+
+    $data = [
+        'title'    => 'Slip Gaji - ' . $payroll['nama'],
+        'payroll'  => $payroll,
+        'potongan' => $potongan,
+        'bulan_txt'=> date('F', mktime(0, 0, 0, $payroll['bulan'], 10)) // Ubah angka bulan ke nama
+    ];
+
+    return view('payroll/payslip', $data);
+}
+
     public function index()
     {
         $payrollModel = new PayrollModel();

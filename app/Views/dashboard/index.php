@@ -1,6 +1,19 @@
 <?= $this->extend('layout/main'); ?>
 <?= $this->section('content'); ?>
 
+<div class="alert alert-info small">
+    <strong>Debug Session:</strong><br>
+    Role saat ini: <span class="badge bg-primary"><?= session()->get('role'); ?></span><br>
+    Is Logged In: <?= session()->get('isLoggedIn') ? 'Ya' : 'Tidak'; ?>
+</div>
+
+<div class="nav flex-column mt-2">
+
+    <a href="<?= site_url('logout'); ?>" class="nav-link text-danger">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+</div>
+
 <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center mb-4" style="background: #fff9e6; color: #856404; font-size: 14px;">
     <i class="fas fa-exclamation-triangle me-3"></i>
     <span>There are some transactions that need to be calculated. Please run the payroll to process. <a href="/payroll" class="fw-bold">View</a></span>

@@ -33,21 +33,47 @@
         </div>
     </div>
     <div class="nav flex-column mt-2">
-        <a href="/" class="nav-link active"><i class="fas fa-home"></i> Home</a>
-        <a href="#" class="nav-link"><i class="fas fa-user-circle"></i> Employee profile</a>
-        <a href="/employees" class="nav-link"><i class="fas fa-users"></i> Employees <i class="fas fa-chevron-right ms-auto small"></i></a>
+<a href="<?= site_url('dashboard'); ?>" class="nav-link <?= (url_is('dashboard*') || url_is('/')) ? 'active' : ''; ?>">
+        <i class="fas fa-home"></i> Home
+    </a>
+    <a href="<?= site_url('employees'); ?>" class="nav-link <?= url_is('employees*') ? 'active' : ''; ?>">
+        <i class="fas fa-users"></i> Employees
+    </a>
+    
+    <?php if (session()->get('role') == 'admin') : ?>
+        <a href="<?= site_url('payroll'); ?>" class="nav-link <?= url_is('payroll*') ? 'active' : ''; ?>">
+            <i class="fas fa-wallet"></i> Payroll
+        </a>
+    <?php endif; ?>
+
+    <hr class="mx-3 my-2 text-muted">
+    <a href="<?= site_url('logout'); ?>" class="nav-link text-danger">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
         <a href="#" class="nav-link"><i class="fas fa-user-plus"></i> Recruitment <i class="fas fa-chevron-right ms-auto small"></i></a>
-        <a href="/payroll" class="nav-link"><i class="fas fa-wallet"></i> Payroll <i class="fas fa-chevron-right ms-auto small"></i></a>
         <a href="#" class="nav-link mt-4 text-muted small uppercase">Applications</a>
         <a href="#" class="nav-link"><i class="fas fa-th-large"></i> Integrations</a>
         <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
     </div>
 </div>
-
 <div class="topbar d-flex align-items-center justify-content-end gap-3">
-    <button class="btn btn-ai px-3"><i class="fas fa-sparkles"></i> Summarize data</button> <i class="fas fa-plus text-muted cursor-pointer"></i> <i class="fas fa-search text-muted cursor-pointer"></i> <div class="position-relative">
-        <i class="fas fa-bell text-muted cursor-pointer"></i> <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 8px;">99+</span>
+    <button class="btn btn-ai px-3"><i class="fas fa-sparkles"></i> Summarize data</button>
+    <i class="fas fa-plus text-muted cursor-pointer"></i>
+    <i class="fas fa-search text-muted cursor-pointer"></i>
+    <div class="position-relative">
+        <i class="fas fa-bell text-muted cursor-pointer"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 8px;">99+</span>
     </div>
+    <i class="fas fa-th text-muted cursor-pointer"></i>
+    
+    <div class="d-flex align-items-center gap-2 border-start ps-3">
+        <div class="text-end d-none d-sm-block">
+            <p class="fw-bold mb-0 small" style="line-height: 1.2;"><?= session()->get('username'); ?></p>
+            <p class="text-muted mb-0" style="font-size: 11px;"><?= strtoupper(session()->get('role')); ?></p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=<?= session()->get('username'); ?>&background=random" class="profile-img border">
+    </div>
+</div>
     <i class="fas fa-th text-muted cursor-pointer"></i> <img src="https://ui-avatars.com/api/?name=Surya" class="profile-img border"> </div>
 
 <div class="main-content">
