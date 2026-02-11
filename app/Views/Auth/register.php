@@ -28,7 +28,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="/auth/attemptRegister" method="post">
+      <form action="<?= site_url('register'); ?>" method="post">
             <?= csrf_field() ?>
             <div class="mb-3">
                 <label class="small fw-bold">USERNAME</label>

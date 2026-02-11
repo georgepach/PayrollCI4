@@ -6,16 +6,20 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// 1. RUTE PUBLIK (Bisa diakses siapa saja/tanpa login)
+// 1. RUTE PUBLIK (WAJIB DI LUAR GRUP FILTER)
 // --------------------------------------------------------------------
-$routes->get('login', 'Auth::login');                 // Halaman form login
-$routes->post('login', 'Auth::attemptLogin');         // Proses verifikasi login
-$routes->get('register', 'Auth::register');           // Halaman form daftar
-$routes->post('register', 'Auth::attemptRegister');   // Proses simpan user baru
+// Halaman Login & Register harus bisa diakses tanpa login.
+$routes->get('login', 'Auth::login'); 
+$routes->get('register', 'Auth::register'); 
+
+// Rute POST ini harus sesuai dengan action pada <form> Anda.
+// Jika di view register.php action-nya "/auth/attemptRegister", maka tulis rutenya di sini.
+$routes->post('auth/attemptRegister', 'Auth::attemptRegister'); 
+$routes->post('auth/attemptLogin', 'Auth::attemptLogin'); 
 
 // 2. RUTE TERPROTEKSI (Wajib Login)
 // --------------------------------------------------------------------
-// Kita menggunakan filter 'auth' untuk melindungi semua rute di dalam grup ini
+// Semua rute di dalam grup ini akan diperiksa oleh 'auth' filter.
 $routes->group('', ['filter' => 'auth'], function($routes) {
 
     // --- Home & Dashboard ---
@@ -27,16 +31,14 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('employees/store', 'Employees::store');
     $routes->get('employees/delete/(:num)', 'Employees::delete/$1');
 
-    // --- Manajemen Payroll ---
-    $routes->get('payroll', 'Payroll::index');              // Dashboard Payroll
-    $routes->get('payroll/generate', 'Payroll::generate');  // Hitung Gaji Massal
-    $routes->get('payroll/payslip/(:num)', 'Payroll::payslip/$1'); // Lihat Slip Gaji
+    // --- Manajemen Payroll (Khusus Admin) ---
+    // Menggunakan filter 'admin' untuk proteksi ekstra.
+    $routes->group('payroll', ['filter' => 'admin'], function($routes) {
+        $routes->get('/', 'Payroll::index');              
+        $routes->get('generate', 'Payroll::generate');    
+        $routes->get('payslip/(:num)', 'Payroll::payslip/$1'); 
+    });
 
-    // --- Autentikasi Akhir ---
+    // --- Logout ---
     $routes->get('logout', 'Auth::logout');
-    $routes->get('login', 'Auth::login');
-    $routes->get('register', 'Auth::register');
-    $routes->post('auth/attemptRegister', 'Auth::attemptRegister');
-    $routes->post('auth/attemptLogin', 'Auth::attemptLogin');
-    
 });
