@@ -38,4 +38,5 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('register', 'Auth::register');
     $routes->post('auth/attemptRegister', 'Auth::attemptRegister');
     $routes->post('auth/attemptLogin', 'Auth::attemptLogin');
+    
 });
